@@ -2,37 +2,28 @@
   <div>one more step</div>
   <div class="name">
     {{ name }}
-    {{ reactiveTest }}
   </div>
-  <button class="btn btn-primary" v-on:click="updateName">Click</button>
+  <input v-bind:type="type" :value="name">
+  <button class="btn btn-primary" @click="updateName">Click</button>
 </template>
 
 <script>
 import { ref } from 'vue';
-import { reactive } from 'vue';
 
   export default {
     setup() {
       const name = ref('hyunsuk');
-      const reactiveTest = reactive({
-        id : 1
-      });
-
-      /* const greeting = (name) => {
-        return name + ' Hello';
-      }
-
-      const greet = greeting(name); */
+      const type = ref('number');
 
       const updateName = () => {
         name.value = 'hyunsuk1111';
-        reactiveTest.id = 2;
+        type.value = 'text';
       }
 
       return {
         name,
-        reactiveTest,
         updateName,
+        type,
       }
     }
   }
