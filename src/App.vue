@@ -1,26 +1,45 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>one more step</div>
+  <div class="name">
+    {{ name }}
+    {{ reactiveTest }}
+  </div>
+  <button class="btn btn-primary" v-on:click="updateName">Click</button>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { ref } from 'vue';
+import { reactive } from 'vue';
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  export default {
+    setup() {
+      const name = ref('hyunsuk');
+      const reactiveTest = reactive({
+        id : 1
+      });
+
+      /* const greeting = (name) => {
+        return name + ' Hello';
+      }
+
+      const greet = greeting(name); */
+
+      const updateName = () => {
+        name.value = 'hyunsuk1111';
+        reactiveTest.id = 2;
+      }
+
+      return {
+        name,
+        reactiveTest,
+        updateName,
+      }
+    }
   }
-}
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  .name {
+    color: skyblue;
+  }
 </style>
