@@ -4,37 +4,38 @@
     <h2>To-Do List</h2>
     <form class="d-flex" @submit.prevent="onSubmit">
       <div class="flex-grow-1 mr-2">
-        <input class="form-control" type="text" placeholder="Type New to-do" v-model="todo">
+        <input class="form-control" type="text" placeholder="Type new Todo" v-model="todo">
       </div>
       <div>
         <button class="btn btn-primary" type="submit">Add</button>
       </div>
     </form>
     <ul>
-      <li v-for="(item, index) in todoList" :key="index">{{ index + 1 }}, {{ item }}</li>
+      <li v-for="(item, index) in todoList" :key="index">{{ item + 1 }}, {{ item }}</li>
     </ul>
   </div>
 </template>
 
 <script>
 import { ref } from 'vue';
+import { reactive } from 'vue';
 
   export default {
     setup() {
-      const todo = ref('');
-      const todoList = ref([]);
+        const todo = ref('');
+        const todoList = reactive([]);
 
-      const onSubmit = () => {
-        todoList.value.push({
-          id : Date.now(),
-          subject: todo.value,
-        });
-      };
+        const onSubmit = () => {
+          todoList.push({
+              id : Date.now(),
+              subject : todo.value,
+            });
+        };
 
       return {
         todo,
-        todoList,
         onSubmit,
+        todoList,
       }
     }
   }
