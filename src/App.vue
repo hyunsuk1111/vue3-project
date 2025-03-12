@@ -1,10 +1,19 @@
 <template>
-  <div>one more step</div>
-  <div class="name">
-    {{ name }}
+  <div class="container">
+    <div>one more step</div>
+    <h2>To-Do List</h2>
+    <form class="d-flex" @submit.prevent="onSubmit">
+      <div class="flex-grow-1 mr-2">
+        <input class="form-control" type="text" placeholder="Type New to-do" v-model="todo">
+      </div>
+      <div>
+        <button class="btn btn-primary" type="submit">Add</button>
+      </div>
+    </form>
+    <ul>
+      <li v-for="(item, index) in todoList" :key="index">{{ index + 1 }}, {{ item }}</li>
+    </ul>
   </div>
-  <input v-bind:type="type" :value="name">
-  <button class="btn btn-primary" @click="updateName">Click</button>
 </template>
 
 <script>
@@ -12,18 +21,20 @@ import { ref } from 'vue';
 
   export default {
     setup() {
-      const name = ref('hyunsuk');
-      const type = ref('number');
+      const todo = ref('');
+      const todoList = ref([]);
 
-      const updateName = () => {
-        name.value = 'hyunsuk1111';
-        type.value = 'text';
-      }
+      const onSubmit = () => {
+        todoList.value.push({
+          id : Date.now(),
+          subject: todo.value,
+        });
+      };
 
       return {
-        name,
-        updateName,
-        type,
+        todo,
+        todoList,
+        onSubmit,
       }
     }
   }
