@@ -10,8 +10,8 @@
         <button class="btn btn-primary" type="submit">Add</button>
       </div>
     </form>
-    <ul>
-      <li v-for="(item, index) in todoList" :key="index">{{ item + 1 }}, {{ item }}</li>
+    <ul class="card mt-2">
+      <li class="card-body p-2" v-for="(item, index) in todoList" :key="index">{{ index + 1 }}, {{ item }}</li>
     </ul>
   </div>
 </template>
