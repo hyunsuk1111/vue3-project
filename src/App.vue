@@ -13,12 +13,15 @@
       </div>
       <div v-show="hasError" style="color: red;">This field cannot be empty</div>
     </form>
+    <div v-if="todoList.length == 0">Empty todoList</div>
     <div class="card mt-2" v-for="(item, index) in todoList" :key="index">
-      <div class="card-body p-2">
-        <div class="form-check">
+      <div class="card-body p-2 d-flex align-items-center">
+        <div class="form-check flex-grow-1">
           <input class="form-check-input" type="checkbox" v-model="item.completed">
-          <label class="form-check-lable">{{ index + 1 }}, {{ item.subject }}</label>
+          <!-- <label class="form-check-lable" :style="item.completed ? todoStyle : {}">{{ index + 1 }}, {{ item.subject }}</label> -->
+          <label class="form-check-lable" :class="{ todo : item.completed }">{{ index + 1 }}, {{ item.subject }}</label>
         </div>
+        <div><button class="btn btn-danger btn-sm" @click="deleteTodo(index)">Delete</button></div>
       </div>
     </div>
   </div>
@@ -33,6 +36,11 @@ import { reactive } from 'vue';
         const todo = ref('');
         const todoList = reactive([]);
         const hasError = ref(false);
+        /* const todoStyle = {
+          textDecoration: 'line-through',
+          color: 'gray',
+
+        } */
 
         const onSubmit = () => {
           if(todo.value === '') {
@@ -49,18 +57,25 @@ import { reactive } from 'vue';
           todo.value = '';
         };
 
+        const deleteTodo = (index) => {
+          todoList.splice(index, 1);
+        };
+
       return {
         todo,
         todoList,
         hasError,
+        /* todoStyle, */
         onSubmit,
+        deleteTodo,
       }
     }
   }
 </script>
 
 <style>
-  .name {
-    color: skyblue;
+  .todo {
+    color: gray;
+    text-decoration: line-through;
   }
 </style>
