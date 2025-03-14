@@ -13,9 +13,14 @@
       </div>
       <div v-show="hasError" style="color: red;">This field cannot be empty</div>
     </form>
-    <ul class="card mt-2">
-      <li class="card-body p-2" v-for="(item, index) in todoList" :key="index">{{ index + 1 }}, {{ item }}</li>
-    </ul>
+    <div class="card mt-2" v-for="(item, index) in todoList" :key="index">
+      <div class="card-body p-2">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" v-model="item.completed">
+          <label class="form-check-lable">{{ index + 1 }}, {{ item.subject }}</label>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -34,12 +39,14 @@ import { reactive } from 'vue';
             hasError.value = true;
           } else {
             todoList.push({
-              id : Date.now(),
-              subject : todo.value,
+              id: Date.now(),
+              subject: todo.value,
+              completed: false,
             });
 
             hasError.value = false;
           }
+          todo.value = '';
         };
 
       return {
