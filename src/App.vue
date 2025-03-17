@@ -2,14 +2,16 @@
   <div class="container">
     <div>one more step</div>
     <h2>To-Do List</h2>
+    <input class="form-control" type="text" placeholder="Search" v-model="searchText">
+    <hr>
     <TodoSimpleForm @add-todoList="addTodolist"/>
-    <div v-if="todoList.length == 0">Empty todoList</div>
-    <TodoList :todoList="todoList" @toggle-todo="toggleTodo" @delete-todo="deleteTodo"/>
+    <div v-if="filteredTodoList.length == 0">There is nothing to display</div>
+    <TodoList :todoList="filteredTodoList" @toggle-todo="toggleTodo" @delete-todo="deleteTodo"/>
   </div>
 </template>
 
 <script>
-import {reactive} from 'vue';
+import {ref, reactive, computed} from 'vue';
 import TodoSimpleForm from './components/TodoSimpleForm.vue';
 import TodoList from './components/TodoList.vue';
 
@@ -34,12 +36,23 @@ import TodoList from './components/TodoList.vue';
           todoList.splice(index, 1);
         };
 
+        const searchText = ref('');
+        const filteredTodoList = computed(()  => {
+          if(searchText.value) {
+            return todoList.filter(todo => {
+              return todo.subject.includes(searchText.value);
+            });
+          }
+          return todoList;
+        });
 
       return {
         todoList,
         addTodolist,
         deleteTodo,
         toggleTodo,
+        searchText,
+        filteredTodoList,
       }
     }
   }
