@@ -5,7 +5,10 @@
     <input class="form-control" type="text" placeholder="Search" v-model="searchText">
     <hr>
     <TodoSimpleForm @add-todoList="addTodolist"/>
+    <div>{{ error }}</div>
+
     <div v-if="filteredTodoList.length == 0">There is nothing to display</div>
+
     <TodoList :todoList="filteredTodoList" @toggle-todo="toggleTodo" @delete-todo="deleteTodo"/>
   </div>
 </template>
@@ -14,6 +17,7 @@
 import {ref, reactive, computed} from 'vue';
 import TodoSimpleForm from './components/TodoSimpleForm.vue';
 import TodoList from './components/TodoList.vue';
+import axios from 'axios';
 
   export default {
     components: {
@@ -23,18 +27,32 @@ import TodoList from './components/TodoList.vue';
 
     setup() {
         const todoList = reactive([]);
+        const error = ref('');
         
         const addTodolist = (todo) => {
-          todoList.push(todo);
-        };
+          error.value = '';
+
+          axios.post('http://localhost:3000/todoList', {
+            subject: todo.subject,
+            completed: todo.completed,
+          }).then(res => {
+            console.log(res);
+
+            todoList.push(res.data);
+          }).catch(err => {
+            error.value = 'Something went wrong.'
+
+            console.log(err);
+          });//axios.post
+        };//addTodolist
         
         const toggleTodo = (index) => {
           todoList[index].completed = !todoList[index].completed;
-        };
+        };//toggleTodo
 
         const deleteTodo = (index) => {
           todoList.splice(index, 1);
-        };
+        };//deleteTodo
 
         const searchText = ref('');
         const filteredTodoList = computed(()  => {
@@ -44,7 +62,7 @@ import TodoList from './components/TodoList.vue';
             });
           }
           return todoList;
-        });
+        });//filteredTodoList
 
       return {
         todoList,
@@ -53,7 +71,8 @@ import TodoList from './components/TodoList.vue';
         toggleTodo,
         searchText,
         filteredTodoList,
-      }
+        error,
+      }//return
     }
   }
 </script>
