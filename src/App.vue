@@ -4,12 +4,12 @@
     <h2>To-Do List</h2>
     <TodoSimpleForm @add-todoList="addTodolist"/>
     <div v-if="todoList.length == 0">Empty todoList</div>
-    <TodoList :todoList="todoList" @toggle-todo="toggleTodo"/>
+    <TodoList :todoList="todoList" @toggle-todo="toggleTodo" @delete-todo="deleteTodo"/>
   </div>
 </template>
 
 <script>
-import { reactive } from 'vue';
+import {reactive} from 'vue';
 import TodoSimpleForm from './components/TodoSimpleForm.vue';
 import TodoList from './components/TodoList.vue';
 

@@ -2,7 +2,7 @@
     <div class="card mt-2" v-for="(item, index) in todoList" :key="index">
       <div class="card-body p-2 d-flex align-items-center">
         <div class="form-check flex-grow-1">
-          <input class="form-check-input" type="checkbox" :value="item.completed" @change="toggleTodo(index)">
+          <input class="form-check-input" type="checkbox" :checked="item.completed" @change="toggleTodo(index)">
           <!-- <input class="form-check-input" type="checkbox" v-model="item.completed"> -->
           <label class="form-check-lable" :class="{ todo : item.completed }">{{ index + 1 }}, {{ item.subject }}</label>
         </div>
@@ -12,22 +12,27 @@
 </template>
 <script>
 export default {
-    /* props: {
+    props: {
         todoList: {
             type: Array,
             required: true
         }
-    } */
-   props: ['todoList'],
+    },//props
 
-   setup(props, context) {
+    emits: ['toggle-todo','delete-todo'],//emitOptions
+
+    setup(props, { emit }) {
     const toggleTodo = (index) => {
-        context.emit('toggle-todo', index);
+        emit('toggle-todo', index);
     };
-    
 
+    const deleteTodo = (index) => {
+        emit('delete-todo', index);
+    }
+    
     return {
         toggleTodo,
+        deleteTodo,
         }
     }//setup
 }

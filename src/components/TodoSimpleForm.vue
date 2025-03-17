@@ -16,7 +16,9 @@
 import { ref } from 'vue';
 
     export default {
-        setup(props, context) {
+        emits: ['add-todoList'],
+
+        setup(props, { emit }) {
             const todo = ref('');
             const hasError = ref(false);
 
@@ -24,15 +26,15 @@ import { ref } from 'vue';
             if(todo.value === '') {
                 hasError.value = true;
             } else {
-                context.emit('add-todoList', {
+                emit('add-todoList', {
                     id: Date.now(),
                     subject: todo.value,
                     completed: false,
                 });
-            hasError.value = false;
+              hasError.value = false;
           }
           todo.value = '';
-        };
+        };//onSubmit
 
         return {
             todo,
@@ -40,7 +42,7 @@ import { ref } from 'vue';
             onSubmit,
         }
 
-        }
+        }//setup
     }
 </script>
 
