@@ -28,30 +28,52 @@ import axios from 'axios';
     setup() {
         const todoList = reactive([]);
         const error = ref('');
+
+        const getTodoList = async () => {
+          try {
+            const res = await axios.get('http://localhost:3000/todoList');
+
+            todoList.splice(0, todoList.length, ...res.data);
+          } catch (err) {
+            console.log(err);
+          }
+        }//getTodoList
+
+        getTodoList();
         
-        const addTodolist = (todo) => {
+        const addTodolist = async (todo) => {
           error.value = '';
 
-          axios.post('http://localhost:3000/todoList', {
-            subject: todo.subject,
-            completed: todo.completed,
-          }).then(res => {
-            console.log(res);
+          try { 
+            const res = await axios.post('http://localhost:3000/todoList', {
+              subject: todo.subject,
+              completed: todo.completed,
+            });
 
             todoList.push(res.data);
-          }).catch(err => {
+          } catch(err) {
             error.value = 'Something went wrong.'
 
             console.log(err);
-          });//axios.post
+          }
         };//addTodolist
         
         const toggleTodo = (index) => {
           todoList[index].completed = !todoList[index].completed;
         };//toggleTodo
 
-        const deleteTodo = (index) => {
-          todoList.splice(index, 1);
+        const deleteTodo = async (index) => {
+          const id = todoList[index].id;
+
+          try {
+            await axios.delete('http://localhost:3000/todoList/'+ id);
+            
+            todoList.splice(index, 1);
+          } catch (error) {
+            console.log(error);
+            
+            error.value = 'Something went wrong.'
+          }
         };//deleteTodo
 
         const searchText = ref('');
@@ -72,6 +94,7 @@ import axios from 'axios';
         searchText,
         filteredTodoList,
         error,
+        getTodoList,
       }//return
     }
   }
