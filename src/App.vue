@@ -10,6 +10,22 @@
     <div v-if="filteredTodoList.length == 0">There is nothing to display</div>
 
     <TodoList :todoList="filteredTodoList" @toggle-todo="toggleTodo" @delete-todo="deleteTodo"/>
+    <hr>
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+          <li v-if="currentPage !== 1" class="page-item">
+            <a style="cursor: pointer;" class="page-link" @click="getTodoList(currentPage - 1)">Previous</a>
+          </li>
+          <li v-for="page in numberOfPages" :key="page" class="page-item" 
+            :class="currentPage === page ? 'active' : '' ">
+            <a style="cursor: pointer;" class="page-link" @click="getTodoList(page)">{{ page }}</a>
+          </li>
+          <li v-if="numberOfPages !== currentPage" class="page-item">
+            <a style="cursor: pointer;" class="page-link" @click="getTodoList(currentPage + 1)">Next</a>
+          </li>
+      </ul>
+    </nav>
   </div>
 </template>
 
@@ -28,10 +44,20 @@ import axios from 'axios';
     setup() {
         const todoList = reactive([]);
         const error = ref('');
+        const numberOfTodoList = ref(0);
+        const limit = 5;
+        const currentPage = ref(1);
 
-        const getTodoList = async () => {
+        const numberOfPages = computed(() => {
+          return Math.ceil(numberOfTodoList.value / limit);
+        });
+
+        const getTodoList = async (page = currentPage.value) => {
+          currentPage.value = page;
+
           try {
-            const res = await axios.get('http://localhost:3000/todoList');
+            const res = await axios.get(`http://localhost:3000/todoList?_page=${page}&_limit=${limit}`);
+            numberOfTodoList.value = res.headers['x-total-count'];
 
             todoList.splice(0, todoList.length, ...res.data);
           } catch (err) {
@@ -39,7 +65,7 @@ import axios from 'axios';
           }
         }//getTodoList
 
-        getTodoList();
+        getTodoList(currentPage.value);
         
         const addTodolist = async (todo) => {
           error.value = '';
@@ -58,8 +84,21 @@ import axios from 'axios';
           }
         };//addTodolist
         
-        const toggleTodo = (index) => {
-          todoList[index].completed = !todoList[index].completed;
+        const toggleTodo = async (index) => {
+          const id = todoList[index].id;
+
+          try {
+            await axios.patch('http://localhost:3000/todoList/'+ id, {
+              completed: !todoList[index].completed,
+            });  
+
+            todoList[index].completed = !todoList[index].completed;
+          } catch (err) {
+            error.value = 'Something went wrong.'
+
+            console.log(err);
+          }
+
         };//toggleTodo
 
         const deleteTodo = async (index) => {
@@ -95,6 +134,8 @@ import axios from 'axios';
         filteredTodoList,
         error,
         getTodoList,
+        numberOfPages,
+        currentPage,
       }//return
     }
   }
