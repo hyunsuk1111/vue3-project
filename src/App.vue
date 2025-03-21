@@ -11,6 +11,7 @@
 
     <TodoList :todoList="filteredTodoList" @toggle-todo="toggleTodo" @delete-todo="deleteTodo"/>
     <hr>
+
     <TodoFooter :currentPage="currentPage" :numberOfPages="numberOfPages" @change-page="getTodoList"/>
   </div>
 </template>
@@ -19,7 +20,7 @@
 import {ref, reactive, computed} from 'vue';
 import TodoSimpleForm from './components/TodoSimpleForm.vue';
 import TodoList from './components/TodoList.vue';
-import TodoFooter from './components/TodoFooter.vue'
+import TodoFooter from './components/TodoFooter.vue';
 import axios from 'axios';
 
   export default {
