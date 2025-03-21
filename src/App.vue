@@ -11,21 +11,7 @@
 
     <TodoList :todoList="filteredTodoList" @toggle-todo="toggleTodo" @delete-todo="deleteTodo"/>
     <hr>
-
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-          <li v-if="currentPage !== 1" class="page-item">
-            <a style="cursor: pointer;" class="page-link" @click="getTodoList(currentPage - 1)">Previous</a>
-          </li>
-          <li v-for="page in numberOfPages" :key="page" class="page-item" 
-            :class="currentPage === page ? 'active' : '' ">
-            <a style="cursor: pointer;" class="page-link" @click="getTodoList(page)">{{ page }}</a>
-          </li>
-          <li v-if="numberOfPages !== currentPage" class="page-item">
-            <a style="cursor: pointer;" class="page-link" @click="getTodoList(currentPage + 1)">Next</a>
-          </li>
-      </ul>
-    </nav>
+    <TodoFooter :currentPage="currentPage" :numberOfPages="numberOfPages" @change-page="getTodoList"/>
   </div>
 </template>
 
@@ -33,12 +19,14 @@
 import {ref, reactive, computed} from 'vue';
 import TodoSimpleForm from './components/TodoSimpleForm.vue';
 import TodoList from './components/TodoList.vue';
+import TodoFooter from './components/TodoFooter.vue'
 import axios from 'axios';
 
   export default {
     components: {
       TodoSimpleForm,
       TodoList,
+      TodoFooter,
     },
 
     setup() {
