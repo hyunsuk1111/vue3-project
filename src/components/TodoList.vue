@@ -22,17 +22,17 @@ export default {
     emits: ['toggle-todo','delete-todo'],//emitOptions
 
     setup(props, { emit }) {
-    const toggleTodo = (index) => {
-        emit('toggle-todo', index);
-    };
+        const toggleTodo = (index) => {
+            emit('toggle-todo', index);
+        };
 
-    const deleteTodo = (index) => {
-        emit('delete-todo', index);
-    }
-    
-    return {
-        toggleTodo,
-        deleteTodo,
+        const deleteTodo = (index) => {
+            emit('delete-todo', index);
+        }
+        
+        return {
+            toggleTodo,
+            deleteTodo,
         }
     }//setup
 }
