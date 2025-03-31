@@ -46,7 +46,7 @@ import axios from 'axios';
           currentPage.value = page;
 
           try {
-            const res = await axios.get(`http://localhost:3000/todoList?subject_like=${searchText.value}&_page=${page}&_limit=${limit}`);
+            const res = await axios.get(`http://localhost:3000/todoList?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`);
             numberOfTodoList.value = res.headers['x-total-count'];
 
             todoList.splice(0, todoList.length, ...res.data);
@@ -61,12 +61,12 @@ import axios from 'axios';
           error.value = '';
 
           try { 
-            const res = await axios.post('http://localhost:3000/todoList', {
+            await axios.post('http://localhost:3000/todoList', {
               subject: todo.subject,
               completed: todo.completed,
             });
 
-            todoList.push(res.data);
+            getTodoList(1);
           } catch(err) {
             error.value = 'Something went wrong.'
 
@@ -97,7 +97,7 @@ import axios from 'axios';
           try {
             await axios.delete('http://localhost:3000/todoList/'+ id);
             
-            todoList.splice(index, 1);
+            getTodoList(1);
           } catch (error) {
             console.log(error);
             
