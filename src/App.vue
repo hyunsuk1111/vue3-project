@@ -7,9 +7,9 @@
     <TodoSimpleForm @add-todoList="addTodolist"/>
     <div>{{ error }}</div>
 
-    <div v-if="filteredTodoList.length == 0">There is nothing to display</div>
+    <div v-if="todoList.length == 0">There is nothing to display</div>
 
-    <TodoList :todoList="filteredTodoList" @toggle-todo="toggleTodo" @delete-todo="deleteTodo"/>
+    <TodoList :todoList="todoList" @toggle-todo="toggleTodo" @delete-todo="deleteTodo"/>
     <hr>
 
     <TodoFooter :currentPage="currentPage" :numberOfPages="numberOfPages" @change-page="getTodoList"/>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import {ref, reactive, computed, watch} from 'vue';
+import {ref, reactive, computed, watch } from 'vue';
 import TodoSimpleForm from './components/TodoSimpleForm.vue';
 import TodoList from './components/TodoList.vue';
 import TodoFooter from './components/TodoFooter.vue';
@@ -36,10 +36,7 @@ import axios from 'axios';
         const numberOfTodoList = ref(0);
         const limit = 5;
         const currentPage = ref(1);
-
-        watch([currentPage, numberOfTodoList], (currentPage, prev) => {
-            console.log(currentPage, prev);
-        });
+        const searchText = ref('');
 
         const numberOfPages = computed(() => {
           return Math.ceil(numberOfTodoList.value / limit);
@@ -49,7 +46,7 @@ import axios from 'axios';
           currentPage.value = page;
 
           try {
-            const res = await axios.get(`http://localhost:3000/todoList?_page=${page}&_limit=${limit}`);
+            const res = await axios.get(`http://localhost:3000/todoList?subject_like=${searchText.value}&_page=${page}&_limit=${limit}`);
             numberOfTodoList.value = res.headers['x-total-count'];
 
             todoList.splice(0, todoList.length, ...res.data);
@@ -108,15 +105,18 @@ import axios from 'axios';
           }
         };//deleteTodo
 
-        const searchText = ref('');
-        const filteredTodoList = computed(()  => {
+        
+        watch(searchText, () => {
+          getTodoList(1);
+        });//watch
+        /* const filteredTodoList = computed(()  => {
           if(searchText.value) {
             return todoList.filter(todo => {
               return todo.subject.includes(searchText.value);
             });
           }
           return todoList;
-        });//filteredTodoList
+        });//filteredTodoList */
 
       return {
         todoList,
@@ -124,7 +124,7 @@ import axios from 'axios';
         deleteTodo,
         toggleTodo,
         searchText,
-        filteredTodoList,
+        //filteredTodoList,
         error,
         getTodoList,
         numberOfPages,
