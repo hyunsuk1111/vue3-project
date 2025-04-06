@@ -1,4 +1,5 @@
 <template>
+  <router-view/>
   <div class="container">
     <div>one more step</div>
     <h2>To-Do List</h2>
@@ -47,8 +48,10 @@ import axios from 'axios';
 
           try {
             const res = await axios.get(`http://localhost:3000/todoList?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`);
-            numberOfTodoList.value = res.headers['x-total-count'];
-
+            
+            const total = res.headers['x-total-count'];
+            numberOfTodoList.value = total ? parseInt(total, 10) : 0;
+            
             todoList.splice(0, todoList.length, ...res.data);
           } catch (err) {
             console.log(err);

@@ -15,6 +15,7 @@ export default {
     props: {
         todoList: {
             type: Array,
+            default: () => [],
             required: true
         }
     },//props
