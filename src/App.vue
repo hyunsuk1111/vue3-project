@@ -2,7 +2,7 @@
   <div class="container">
     <div>one more step</div>
     <h2>To-Do List</h2>
-    <input class="form-control" type="text" placeholder="Search" v-model="searchText">
+    <input class="form-control" type="text" placeholder="Search" v-model="searchText" @keyup.enter="searchTodo">
     <hr>
     <TodoSimpleForm @add-todoList="addTodolist"/>
     <div>{{ error }}</div>
@@ -105,18 +105,21 @@ import axios from 'axios';
           }
         };//deleteTodo
 
-        
-        watch(searchText, () => {
+        const searchTodo = () => {
+          clearTimeout(timeout);
+          
           getTodoList(1);
+        };//searchTodo
+
+        let timeout = null;
+
+        watch(searchText, () => {
+          clearTimeout(timeout);
+
+          timeout = setTimeout(() => {
+            getTodoList(1);
+          }, 2000)
         });//watch
-        /* const filteredTodoList = computed(()  => {
-          if(searchText.value) {
-            return todoList.filter(todo => {
-              return todo.subject.includes(searchText.value);
-            });
-          }
-          return todoList;
-        });//filteredTodoList */
 
       return {
         todoList,
@@ -124,11 +127,11 @@ import axios from 'axios';
         deleteTodo,
         toggleTodo,
         searchText,
-        //filteredTodoList,
         error,
         getTodoList,
         numberOfPages,
         currentPage,
+        searchTodo,
       }//return
     }
   }
