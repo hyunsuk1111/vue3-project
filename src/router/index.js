@@ -5,8 +5,8 @@ import TodoList from '../pages/todoList/index.vue';
 const router = createRouter({
     history: createWebHistory(),
     routes: [
-        { path:'/', name: 'TodoHome', component: Home },
-        { path:'/todoList', name: 'TodoList', component: TodoList }
+        { path:'/', name: 'todoHome', component: Home },
+        { path:'/todoList', name: 'todoList', component: TodoList }
     ]
 });
 

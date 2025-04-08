@@ -4,7 +4,7 @@
 
 <script>
 export default {
-    name: 'TodoHome',
+    name: 'todoHome',
 }
 </script>
 
